@@ -1,0 +1,27 @@
+body {
+    background-color: #282c34;
+    color: white;
+    padding: 40px;
+    font-family: Times New Roman;
+  }
+
+.profile-header {
+    margin: 2.5% 10;
+    font-size: 30px;
+    text-align: center;
+  }
+
+.profile-info {
+    margin-bottom: 25px;
+  }
+
+img {
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+    width: 35%;
+  }
+
+ul {
+    list-style-type: none;
+  }
