@@ -4,7 +4,22 @@
 
 <div class="columns is-centered">
     <div class="column is-white is-8">
-        <h3 class="title">{{user.username}}'s Page</h3>
+        <div class="columns is-centered">
+            <div class="column is-full">
+                <h3 class="title">{{user.username}}'s Page</h3>
+            </div>
+        </div>
+        <div class="columns is-overlay is-centered">
+            <div class="column is-offset-7">
+                <a href="{{url_for('home')}}">
+                    <button class="button">
+                        <span class="icon">
+                            <i class="fas fa-home"></i>
+                        </span>
+                    </button>
+                </a>
+            </div>
+        </div>
         <div class="box">
             <div class="columns is-centered">
                 <div class="column is-one-third">

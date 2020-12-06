@@ -9,14 +9,14 @@ class UserEditFormFactory:
     @staticmethod
     def form(user):
         class F(FlaskForm):
-            username = StringField(default=teachers.username)
-            name = StringField(default=teachers.name)
-            location = StringField(default=teachers.location)
-            subjects = StringField(default=teachers.subjects)
+            username = StringField(default=user.username)
+            name = StringField(default=user.name)
+            location = StringField(default=user.location)
+            subjects = StringField(default=user.subjects)
             education_level = SelectField(u'Education Level', choices=[('First Grade', 'First Grade'), ('Second Grade', 'Second Grade'), ('Third Grade', 'Third Grade'),('Fourth Grade', 'Fourth Grade'),('Fifth Grade', 'Fifth Grade'),
             ('Sixth Grade', 'Sixth Grade'),('Seventh Grade', 'Seventh Grade'),('Eigth Grade', 'Eigth Grade'),('Ninth Grade', 'Ninth Grade'),('Tenth Grade', 'Tenth Grade'),('Eleventh Grade', 'Eleventh Grade'),('Twelfth Grade', 'Twelfth Grade'),
             ("Undergraduate", "Undergraduate"), ("Graduate","Graduate")])
-            bio = StringField(default=teachers.bio)
+            bio = StringField(default=user.bio)
         return F()
 
 class ReviewFormFactory:
