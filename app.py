@@ -25,8 +25,11 @@ app.secret_key = 's3cr3t'
 app.config.from_object('config')
 db = SQLAlchemy(app, session_options={'autocommit': False})
 
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.init_app(app)
+
 @app.route('/')
-@login_required
 def home():
     resources = {}
 
@@ -221,30 +224,80 @@ def edit_user():
         return
     return
 
-@app.route('/login')
-def login():
 
-@app.route('/login', methods=['POST'])
-def login_post():
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id) #check this later for bugs
+
+@app.route('/register', methods = ['GET', 'POST'])
+def register():
+    if request.method ==- 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        location = request.form.get('location')
+        subjects = request.form.get('subjects')
+        education_level = request.form.get('education level')
+        bio = request.form.get('bio')
+        maiden = request.form.get('maiden')
+
+        existing = models.Teachers.query.filter_by(username=username).first()
+        if existing:
+         flash('There already exists an account with this username. Please register with a different username.')
+         return #redirect(url_for('register')) # username already in use
+        else:
+            new_teacher = models.Teachers(username=username, password=generate_password_hash(password, method='sha256'), location=location, subjects=subjects, education_level=education_level, bio=bio, maiden=generate_password_hash(maiden, method='sha256'))
+            db.session.add(new_teacher)
+            db.session.commit()
+            db.session.close()
+            return redirect(url_for('login'))
+    else:
+        return #render_template("register.html")
+    
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        remember = True if request.form.get('remember') else False
+
+
+        teacher = models.Teachers.query.filter_by(username=username).first()
+
+        # take the user-supplied password, hash it, and compare it to hashed password in the database
+        if not teacher or not check_password_hash(teacher.password, password):
+            flash('Incorrect username/password combination.')
+            return #redirect(url_for('login'))  user doesn't exist or password is wrong, reload the page
+
+        # if the above check passes, then we know the user has the right credentials
+        login_user(teacher, remember=remember)
+    else:
+        return #render_template('login.html')
 
 @app.route('/forgot', methods=['POST'])
 def forgot_post():
+    return ""
 
 @app.route('/reset/<token>')
 def reset_with_token(token):
+    return ""
 
 @app.route('/reset/<token>', methods=['POST'])
 def reset_post(token):
+    return ""
+
 
 @app.route('/forgot')
 def forgot():
+    return ""
+
 
 @app.route('/logout')
 @login_required
-def logout():
+def resource(resource_id):
+    return ""
 
-@app.route('/register')
-def register():
 
-@app.route('/register', methods = ['POST'])
-def register_post():
+if __name__ == '__main__':
+    app.run(debug=True)
