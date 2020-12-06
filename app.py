@@ -18,6 +18,7 @@ import urllib.request
 import requests
 import base64
 import json
+import imghdr
 
 app = Flask(__name__)
 app.secret_key = 's3cr3t'
@@ -30,8 +31,12 @@ login_manager.init_app(app)
 
 @app.route('/')
 def home():
-    return render_template("login.html")
+    resources = {}
 
+    for category in categories:
+        resources[category] = db.session.query(models.Resources).filter(models.Resources.category == category).limit(10).all()
+
+    return
 
 @app.route('/resource/<resource_id>')
 @login_required
@@ -49,21 +54,28 @@ def edit_resource(resource_id):
         if form.validate_on_submit():
             form.errors.pop('database', None)
 
-            if (request.files['image']):
-                image = request.files['image']
-                apiUrl = 'https://api.imgur.com/3/image'
-                b64_image = base64.standard_b64encode(image.read())
-                params = {'image' : b64_image}
-                headers = {'Authorization' : 'Client-ID 12aa250c79dba8d'}
-                #client_id = '12aa250c79dba8d'
-                #client_secret = '0e132c4d82850eda1d2a172903f5a85bcea10a0b'
-                response = requests.post(apiUrl, headers=headers, data=params)
-                result = json.loads(response.text)
-                edit_posting = models.Resources()
-                edit_posting.file = result['data']['link']
-                models.Resources.edit(resource_id, current_user.username, form.resource_name.data, form.category.data, form.subject.data, edit_posting.file, form.description.data, form.date_posted.data)
-            else:
-                models.Resources.edit(resource_id, current_user.username, form.resource_name.data, form.category.data, form.subject.data, resource.file, form.description.data, form.date_posted.data)
+            if request.method == 'POST':
+                file = request.files['file']
+                stream = file.stream
+                header = stream.read(512)
+                stream.seek(0)
+                format = imghdr.what(None, header)
+                if not format:
+                    return None
+                if (format == 'jpg' or format == 'png' or format == 'jpeg'):
+                    apiUrl = 'https://api.imgur.com/3/file'
+                    b64_image = base64.standard_b64encode(file.read())
+                    params = {'file' : b64_image}
+                    headers = {'Authorization' : 'Client-ID 12aa250c79dba8d'}
+                    #client_id = '12aa250c79dba8d'
+                    #client_secret = '0e132c4d82850eda1d2a172903f5a85bcea10a0b'
+                    response = requests.post(apiUrl, headers=headers, data=params)
+                    result = json.loads(response.text)
+                    edit_posting = models.Resources()
+                    edit_posting.file = result['data']['link']
+                    models.Resources.edit(resource_id, current_user.username, form.resource_name.data, form.category.data, form.subject.data, edit_posting.file, form.description.data, form.date_posted.data)
+                else:
+                    models.Resources.edit(resource_id, current_user.username, form.resource_name.data, form.category.data, form.subject.data, resource.file, form.description.data, form.date_posted.data)
 
                 flash('Item been modified successfully')
                 return
@@ -85,18 +97,28 @@ def post_resource():
         new_posting.category = form.category.data
         new_posting.subject = form.subject
         new_posting.description = form.description.data
+        if request.method == 'POST':
+            file = request.files['file']
+            stream = file.stream
+            header = stream.read(512)
+            stream.seek(0)
+            format = imghdr.what(None, header)
+            if not format:
+                return None
+            if (format == 'jpg' or format == 'png' or format == 'jpeg'):
+                apiUrl = 'https://api.imgur.com/3/file'
+                b64_image = base64.standard_b64encode(file.read())
+                params = {'file' : b64_image}
+                headers = {'Authorization' : 'Client-ID 12aa250c79dba8d'}
+                #client_id = '12aa250c79dba8d'
+                #client_secret = '0e132c4d82850eda1d2a172903f5a85bcea10a0b'
+                response = requests.post(apiUrl, headers=headers, data=params)
+                result = json.loads(response.text)
+                new_posting.file = result['data']['link']
+            else:
+                new_posting.file = form.file.data
 
-        if (request.files['image']):
-            image = request.files['image']
-            apiUrl = 'https://api.imgur.com/3/image'
-            b64_image = base64.standard_b64encode(image.read())
-            params = {'image' : b64_image}
-            headers = {'Authorization' : 'Client-ID 12aa250c79dba8d'}
-            #client_id = '12aa250c79dba8d'
-            #client_secret = '0e132c4d82850eda1d2a172903f5a85bcea10a0b'
-            response = requests.post(apiUrl, headers=headers, data=params)
-            result = json.loads(response.text)
-            new_posting.image = result['data']['link']
+        new_posting.date_posted = str(datetime.date.today())
 
         db.session.add(new_posting)
 
@@ -181,8 +203,15 @@ def search():
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile(username):
-    
+    user =  db.session.query(models.Teachers)\
+        .filter(models.Teachers.username == username).one()
 
+    rating = db.session.execute('SELECT AVG(item_rating) FROM reviews WHERE teacher_id=:teacher_id', dict(teacher_id=username)).first()[0]
+
+    resources_provided = db.session.query(models.Resources)\
+        .filter(models.Resources.teacher_id == username).all()
+
+    return
 
 @app.route('/edit-user', methods=['GET', 'POST'])
 @login_required
