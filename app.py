@@ -148,6 +148,10 @@ def review(resource_id):
             flash('You can only review a resource once')
             return redirect(url_for('review', resource_id=resource_id))
 
+        if resource.reviewer_username == resource.teacher_id:
+            flash('You cannot review your own item!')
+            return redirect(url_for('review', resource_id=resource_id))
+
         try:
             new_review = models.Reviews()
             new_review.item_rating = form.item_rating.data
@@ -340,7 +344,7 @@ def reset_post(token):
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login')) 
+    return redirect(url_for('login'))
 
 
 @app.template_filter('pluralize')

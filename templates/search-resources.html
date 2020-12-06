@@ -21,12 +21,12 @@
             {{form.csrf_token}}
             <div class="field">
                 <div class="control">
-                    <input class="input is-primary is-rounded is-fullwidth" type="text" name="query" placeholder="Search for resources...">
+                    <input class="input is-primary is-rounded is-fullwidth is-danger" type="text" name="query" placeholder="Search for resources...">
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                  <div class="select is-primary is-rounded">
+                  <div class="select is-primary is-rounded is-danger">
                       <select name="category">
                           <option value="All">
                               Category
@@ -38,7 +38,12 @@
                           {% endfor %}
                       </select>
                   </div>
-                  <div class="select is-primary is-rounded">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                  <div class="select is-primary is-rounded is-danger">
                       <select name="education level">
                           <option value="All">
                               Education Level
@@ -55,7 +60,7 @@
             <a href="{{url_for('home')}}">
                 <input class="button is-light" value="Reset" style="margin-right:10px;margin-bottom:10px;width:100px;"/>
             </a>
-            <input class="button is-primary" type="submit" value="Search" style="margin-left:10px;margin-bottom:10px;width:100px;"/>
+            <input class="button is-primary is-warning" type="submit" value="Search" style="margin-left:10px;margin-bottom:10px;width:100px;"/>
             {% if form.query.errors %}
             <ul>
                 {% for error in form.query.errors %}
@@ -73,7 +78,7 @@
                 <li>
                     <div class="columns">
                         <div class="column is-one-half">
-                            <button class="button is-primary is-inverted is-medium is-centered" style="white-space:normal;margin-top:20px;width:500px;height:auto;">
+                            <button class="button is-primary is-inverted is-medium is-centered is-info" style="white-space:normal;margin-top:20px;width:500px;height:auto;">
                                 <a href="{{url_for('resource', resource_id=resource.resource_id)}}">
                                     {{resource.resource_name}}
                                 </a>
