@@ -13,8 +13,8 @@ class UserEditFormFactory:
             name = StringField(default=teachers.name)
             location = StringField(default=teachers.location)
             subjects = StringField(default=teachers.subjects)
-            education_level = StringField(default=teachers.education_level)
-            bio = StringField(default=teachers.bio)
+            education_level = SelectField(u'Education Level', choices=[('First Grade', 'First Grade'), ('Second Grade', 'Second Grade'), ('Third Grade', 'Third Grade'),('Fourth Grade', 'Fourth Grade'),('Fifth Grade', 'Fifth Grade'),
+            ('Sixth Grade', 'Sixth Grade'),('Seventh Grade', 'Seventh Grade'),('Eigth Grade', 'Eigth Grade'),('Ninth Grade', 'Ninth Grade'),('Tenth Grade', 'Tenth Grade'),('Eleventh Grade', 'Eleventh Grade'),('Twelfth Grade', 'Twelfth Grade')])            bio = StringField(default=teachers.bio)
         return F()
 
 class ReviewFormFactory:
@@ -32,7 +32,8 @@ class PostingFormFactory:
             resource_name = StringField(default='')
             category = SelectField(u'Category', choices=[('Lecture Recordings', 'Lecture Recordings'), ('Study Guides', 'Study Guides'), ('Handouts', 'Handouts'), ('Projects', 'Projects')])
             subject = StringField(default='')
-            education_level = SelectField(u'Education Level', choices=[('', 'High School'), ('College', 'College'), ('Middle School', 'Middle School'), ('Projects', 'Projects')])
+            education_level = SelectField(u'Education Level', choices=[('First Grade', 'First Grade'), ('Second Grade', 'Second Grade'), ('Third Grade', 'Third Grade'),('Fourth Grade', 'Fourth Grade'),('Fifth Grade', 'Fifth Grade'),
+            ('Sixth Grade', 'Sixth Grade'),('Seventh Grade', 'Seventh Grade'),('Eigth Grade', 'Eigth Grade'),('Ninth Grade', 'Ninth Grade'),('Tenth Grade', 'Tenth Grade'),('Eleventh Grade', 'Eleventh Grade'),('Twelfth Grade', 'Twelfth Grade')])
             file = FileField(u'File Upload')
             description = StringField(default='')
         return F()
@@ -44,8 +45,8 @@ class ResourceEditFormFactory:
             resource_name = StringField(default=resources.resource_name)
             category = SelectField(u'Category', choices=[('Lecture Recordings', 'Lecture Recordings'), ('Study Guides', 'Study Guides'), ('Handouts', 'Handouts'), ('Projects', 'Projects')])
             subject = StringField(default=resources.subject)
-            education_level = SelectField(u'Education Level', choices=[('High School', 'High School'), ('College', 'College'), ('Middle School', 'Middle School'), ('Projects', 'Projects')])
-            file = FileField(u'File Upload')
+            education_level = SelectField(u'Education Level', choices=[('First Grade', 'First Grade'), ('Second Grade', 'Second Grade'), ('Third Grade', 'Third Grade'),('Fourth Grade', 'Fourth Grade'),('Fifth Grade', 'Fifth Grade'),
+            ('Sixth Grade', 'Sixth Grade'),('Seventh Grade', 'Seventh Grade'),('Eigth Grade', 'Eigth Grade'),('Ninth Grade', 'Ninth Grade'),('Tenth Grade', 'Tenth Grade'),('Eleventh Grade', 'Eleventh Grade'),('Twelfth Grade', 'Twelfth Grade')])            file = FileField(u'File Upload')
             description = StringField(default=resources.description)
         return F()
 
