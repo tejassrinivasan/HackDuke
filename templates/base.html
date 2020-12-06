@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hack Duke</title>
+    <title>TeachOverflow</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
@@ -12,10 +12,58 @@
 
 <body>
     <section class="hero is-light is-fullheight">
+        <div class="hero-head">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="{{url_for('home')}}">
+                        <img src="/static/img/logo.png" height="200">
+                    </a>
+
+                    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+
+                <div id="navbarBasicExample" class="navbar-menu">
+                    <div class="navbar-start">
+                        <a class="navbar-item" href="{{url_for('home')}}">
+                            Home
+                        </a>
+
+                        <a class="navbar-item" href="{{url_for('profile')}}">
+                            Profile
+                        </a>
+                    </div>
+
+
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div class="buttons">
+                                {% if current_user.is_authenticated %}
+                                  <a class="button is-info" href="{{url_for('logout')}}">
+                                    <strong>Log Out</strong>
+                                  </a>
+                                {% else %}
+                                  <a class="button is-primary" href="{{url_for('register')}}">
+                                      <strong>Sign Up</strong>
+                                  </a>
+                                  <a class="button is-info" href="{{url_for('login')}}">
+                                      <strong>Log in</strong>
+                                  </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+        </div>
         <div class="hero-body">
             <div class="container has-text-centered">
-               {% block content %}
-               {% endblock %}
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
     </section>

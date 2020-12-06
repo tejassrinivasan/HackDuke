@@ -16,22 +16,7 @@
 
 <div class="columns is-centered">
     <div class="column is-white is-8">
-        <div class="columns is-centered">
-            <div class="column is-full">
-                <h3 class="title">All Reviews for {{resource.resource_name}}</h3>
-            </div>
-        </div>
-        <div class="columns is-overlay is-centered">
-            <div class="column is-offset-7">
-                <a href="{{url_for('home')}}">
-                    <button class="button">
-                        <span class="icon">
-                            <i class="fas fa-home"></i>
-                        </span>
-                    </button>
-                </a>
-            </div>
-        </div>
+        <h3 class="title">All Reviews for {{resource.resource_name}}</h3>
         <div class="box">
             <p class="subtitle is-5">{{reviews|length}} review{{reviews|length|pluralize}}
                 found...</p>

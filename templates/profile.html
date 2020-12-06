@@ -4,22 +4,7 @@
 
 <div class="columns is-centered">
     <div class="column is-white is-8">
-        <div class="columns is-centered">
-            <div class="column is-full">
-                <h3 class="title">{{user.username}}'s Page</h3>
-            </div>
-        </div>
-        <div class="columns is-overlay is-centered">
-            <div class="column is-offset-7">
-                <a href="{{url_for('home')}}">
-                    <button class="button">
-                        <span class="icon">
-                            <i class="fas fa-home"></i>
-                        </span>
-                    </button>
-                </a>
-            </div>
-        </div>
+        <h3 class="title">{{user.username}}'s Page</h3>
         <div class="box">
             <div class="columns is-centered">
                 <div class="column is-one-third">
@@ -80,9 +65,14 @@
                     <span class="tag is-light is-large margin-top" style="width:450px;height:150px;margin:5px;">
                         <p>{{user.bio}}</p>
                     </span>
-                    <hr>
                 </div>
             </div>
+            <hr>
+            <button class="button is-primary is-centered">
+                <a href="{{url_for('edit_user')}}">
+                    Edit Profile
+                </a>
+            </button>
         </div>
         <br>
         <h3 class="title">Resources Provided</h3>
@@ -103,7 +93,6 @@
                     <p>Education Level: <strong>{{resource.education_level}}</strong></p>
                     <p>Description: <em>{{resource.description}}</em></p>
                     <p>Date Posted: <strong>{{resource.date_posted}}</strong></p>
-
                 </div>
             </div>
             <hr/>
