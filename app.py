@@ -28,8 +28,6 @@ db = SQLAlchemy(app, session_options={'autocommit': False})
 @login_required
 def home():
 
-
-
 @app.route('/resource/<resource_id>')
 @login_required
 def resource(resource_id):
