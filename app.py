@@ -29,23 +29,26 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
+categories = ['Lecture Recordings', 'Handouts', 'Study Guides', 'Projects']
+levels = ['First Grade', 'Second Grade', 'Third Grade', 'Fourth Grade', 'Fifth Grade', 'Sixth Grade', 'Seventh Grade', 'Eigth Grade', 'Ninth Grade', 'Tenth Grade', 'Eleventh Grade', 'Twelfth Grade', 'Undergraduate', 'Graduate']
+
+
 @app.route('/')
-@login_required
+
 def home():
-    resources = []
+    resources = {}
 
-    resources = db.session.query(models.Resources).limit(10).all()
+    for category in categories:
+        resources[category] = db.session.query(models.Resources).filter(models.Resources.category == category).all()
 
-    user = current_user.username
-
-    return
+    return render_template('home.html', resources=resources, form=forms.SearchFormFactory.form(), levels=levels)
 
 @app.route('/resource/<resource_id>')
 @login_required
 def resource(resource_id):
     resource = db.session.query(models.Resources)\
-        .filter(models.Resources.resource_id).all()
-    return
+        .filter(models.Resources.resource_id == resource_id).all()
+    return render_template('resource.html', resource=resource)
 
 @app.route('/edit-resource/<resource_id>', methods=['GET', 'POST'])
 @login_required
@@ -77,14 +80,14 @@ def edit_resource(resource_id):
                 else:
                     models.Resources.edit(resource_id, current_user.username, form.resource_name.data, form.category.data, form.subject.data, form.education_level.data, resource.file, form.description.data, form.date_posted.data)
 
-                flash('Item been modified successfully')
-                return
+                    flash('Resource been modified successfully')
+                    return redirect(url_for('profile', username=current_user.username))
     except:
-        flash('You are not posting this item or this is not a valid resource.')
-    return
+        flash('You are not posting this resource or this is not a valid resource.')
+    return render_template('edit_resource.html', resource=resource, form=form)
 
 @app.route('/post_resource', methods=['GET', 'POST'])
-
+@login_required
 def post_resource():
     form = forms.PostingFormFactory.form()
     if form.validate_on_submit():
@@ -92,7 +95,7 @@ def post_resource():
                          string.digits, k = 30))
         new_posting = models.Resources()
         new_posting.resource_id = randomString
-        new_posting.teacher_id = 'pbuffay'
+        new_posting.teacher_id = current_user.username
         new_posting.resource_name = form.resource_name.data
         new_posting.category = form.category.data
         new_posting.subject = form.subject.data
@@ -141,7 +144,7 @@ def review(resource_id):
         num_reviews = len([r for r in reviews if r.teacher_id == current_user.username])
 
         if num_reviews >= 1:
-            flash('You can only review an item once')
+            flash('You can only review an resource once')
             return
 
         try:
@@ -168,12 +171,12 @@ def review(resource_id):
         avg_rating /= len(reviews)
         avg_rating = round(avg_rating, 2)
 
-    return
+    return render_template('reviews.html', resource=resource, reviews=reviews, avg_rating=avg_rating, form=form)
 
 @app.route('/search', methods=['GET'])
 def search_page(resources=None):
     resources = [] if resources is None else resources
-    return
+    return render_template('search-resources.html', resources=resources, form=forms.SearchFormFactory.form(), categories=categories, levels=levels)
 
 
 @app.route('/search', methods=['POST'])
@@ -183,22 +186,26 @@ def search():
     form = forms.SearchFormFactory.form()
     if form.validate_on_submit():
         try:
-            if form.category.data == 'All' or form.category.data is None:
+            if form.category.data == 'Category' or form.category.data is None:
+                resources = db.session.query(models.Resources) \
+                    .filter(models.Resources.resource_name.like('%{}%'.format(form.query.data))).limit(10).all()
+
+            elif form.education_level.data == 'Education Level' or form.education_level.data is None:
                 resources = db.session.query(models.Resources) \
                     .filter(models.Resources.resource_name.like('%{}%'.format(form.query.data))).limit(10).all()
             else:
                 resources = db.session.query(models.Resources) \
                     .filter(models.Resources.resource_name.like('%{}%'.format(form.query.data))) \
-                    .filter(models.Resources.category == form.category.data).limit(10).all()
+                    .filter(models.Resources.category == form.category.data).filter(models.Resources.education_level == form.education_level.data).limit(10).all()
 
         except BaseException as e:
             form.errors['database'] = str(e)
-            return
+            return redirect(url_for('home'))
 
-    return
+    return render_template('search-resources.html', resources=resources, form=form, categories=categories, levels=levels)
 
-@app.route('/profile/<username>', methods=['GET', 'POST'])
-
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
 def profile(username):
     user =  db.session.query(models.Teachers)\
         .filter(models.Teachers.username == username).one()
@@ -218,9 +225,8 @@ def edit_user():
     if form.validate_on_submit():
         form.errors.pop('database', None)
         models.Teachers.edit(current_user.username, form.name.data, form.location.data, form.subjects.data, form.education_level.data, form.bio.data)
-        return
-    return
-
+        return redirect(url_for('profile'))
+    return render_template('edit-user.html', user=current_user, form=form)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -335,6 +341,10 @@ def logout():
     logout_user()
     return # redirect(url_for('home')) go back to home pg
 
+
+@app.template_filter('pluralize')
+def pluralize(number, singular='', plural='s'):
+    return singular if number == 1 else plural
 
 if __name__ == '__main__':
     app.run(debug=True)

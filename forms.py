@@ -59,5 +59,6 @@ class SearchFormFactory:
     def form():
         class F(FlaskForm):
             query = StringField(default='')
-            category = StringField(default='All')
+            category = StringField(default='Category')
+            education_level = StringField(default='Education Level')
         return F()
