@@ -19,7 +19,7 @@ class Teachers(UserMixin, db.Model):
 class Resources(db.Model):
     __tablename__ = 'Resources'
     resource_id = db.Column('resource_id', db.String(30), primary_key=True)
-    teacher_id = db.Column('teacher_id', db., primary_key=True)
+    teacher_id = db.Column('teacher_id', db.String(30), primary_key=True)
     resource_name = db.Column('resource_name', db.String(500))
     category = db.Column('category', db.String(100))
     file = db.Column('file', db.String(1000))
