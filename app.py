@@ -184,6 +184,16 @@ def search_page(resources=None):
     resources = [] if resources is None else resources
     return render_template('search-resources.html', resources=resources, form=forms.SearchFormFactory.form(), categories=categories, levels=levels)
 
+@app.route('/delete/<resource_id>', methods=['POST', 'GET'])
+@login_required
+def delete(resource_id):
+    user = current_user.username
+    db.session.execute('DELETE FROM Resources WHERE teacher_id = :user AND resource_id = :resource_id', dict(resource_id=resource_id, user=user))
+    db.session.commit()
+    db.session.close()
+    flash('Resource deleted successfully')
+    return render_template('profile.html')
+
 
 @app.route('/search', methods=['POST'])
 @login_required

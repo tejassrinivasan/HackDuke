@@ -68,7 +68,7 @@
                 </div>
             </div>
             <hr>
-            <button class="button is-primary is-centered">
+            <button class="button is-primary is-centered is-info">
                 <a href="{{url_for('edit_user')}}">
                     Edit Profile
                 </a>
@@ -93,6 +93,18 @@
                     <p>Education Level: <strong>{{resource.education_level}}</strong></p>
                     <p>Description: <em>{{resource.description}}</em></p>
                     <p>Date Posted: <strong>{{resource.date_posted}}</strong></p>
+                    <br>
+                    <button class="button is-primary is-centered is-warning" style="margin-right:10px">
+                        <a href="{{url_for('edit_resource', resource_id=resource.resource_id)}}">
+                            Edit
+                        </a>
+                    </button>
+                    <button class="button is-primary is-centered is-danger" style="margin-left:10px">
+                        <a href="{{url_for('delete', resource_id=resource.resource_id)}}">
+                            Delete
+                        </a>
+                    </button>
+
                 </div>
             </div>
             <hr/>
