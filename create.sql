@@ -20,7 +20,10 @@ CREATE TABLE Resources(resource_id VARCHAR(30) NOT NULL,
             		       resource_name VARCHAR(500) NOT NULL,
             		       category VARCHAR(100),
                        subject VARCHAR(100),
+                       education_level VARCHAR(100),
             		       file VARCHAR(1000),
             		       description VARCHAR(2000),
             		       date_posted VARCHAR(100),
             		       PRIMARY KEY(resource_id, teacher_id));
+
+#CREATE TABLE Forumns()

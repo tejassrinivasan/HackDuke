@@ -23,6 +23,7 @@ class Resources(db.Model):
     resource_name = db.Column('resource_name', db.String(500))
     category = db.Column('category', db.String(100))
     subject = db.Column('subject', db.String(100))
+    education_level = db.Column('education_level', db.String(100))
     file = db.Column('file', db.String(1000))
     description = db.Column('description', db.String(2000))
     date_posted = db.Column('date_posted', db.String(100))

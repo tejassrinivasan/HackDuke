@@ -31,10 +31,11 @@ login_manager.init_app(app)
 
 @app.route('/')
 def home():
-    resources = {}
+    resources = []
 
-    for category in categories:
-        resources[category] = db.session.query(models.Resources).filter(models.Resources.category == category).limit(10).all()
+    resources = db.session.query(models.Resources).limit(10).all()
+
+    user = current_user.username
 
     return
 
@@ -73,9 +74,9 @@ def edit_resource(resource_id):
                     result = json.loads(response.text)
                     edit_posting = models.Resources()
                     edit_posting.file = result['data']['link']
-                    models.Resources.edit(resource_id, current_user.username, form.resource_name.data, form.category.data, form.subject.data, edit_posting.file, form.description.data, form.date_posted.data)
+                    models.Resources.edit(resource_id, current_user.username, form.resource_name.data, form.category.data, form.subject.data, form.education_level.data, edit_posting.file, form.description.data, form.date_posted.data)
                 else:
-                    models.Resources.edit(resource_id, current_user.username, form.resource_name.data, form.category.data, form.subject.data, resource.file, form.description.data, form.date_posted.data)
+                    models.Resources.edit(resource_id, current_user.username, form.resource_name.data, form.category.data, form.subject.data, form.education_level.data, resource.file, form.description.data, form.date_posted.data)
 
                 flash('Item been modified successfully')
                 return
@@ -96,6 +97,7 @@ def post_resource():
         new_posting.resource_name = form.resource_name.data
         new_posting.category = form.category.data
         new_posting.subject = form.subject
+        new_posting.education_level = form.education_level.data
         new_posting.description = form.description.data
         if request.method == 'POST':
             file = request.files['file']
