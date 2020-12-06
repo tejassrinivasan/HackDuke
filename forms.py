@@ -14,7 +14,9 @@ class UserEditFormFactory:
             location = StringField(default=teachers.location)
             subjects = StringField(default=teachers.subjects)
             education_level = SelectField(u'Education Level', choices=[('First Grade', 'First Grade'), ('Second Grade', 'Second Grade'), ('Third Grade', 'Third Grade'),('Fourth Grade', 'Fourth Grade'),('Fifth Grade', 'Fifth Grade'),
-            ('Sixth Grade', 'Sixth Grade'),('Seventh Grade', 'Seventh Grade'),('Eigth Grade', 'Eigth Grade'),('Ninth Grade', 'Ninth Grade'),('Tenth Grade', 'Tenth Grade'),('Eleventh Grade', 'Eleventh Grade'),('Twelfth Grade', 'Twelfth Grade')])            bio = StringField(default=teachers.bio)
+            ('Sixth Grade', 'Sixth Grade'),('Seventh Grade', 'Seventh Grade'),('Eigth Grade', 'Eigth Grade'),('Ninth Grade', 'Ninth Grade'),('Tenth Grade', 'Tenth Grade'),('Eleventh Grade', 'Eleventh Grade'),('Twelfth Grade', 'Twelfth Grade'),
+            ("Undergraduate", "Undergraduate"), ("Graduate","Graduate")])
+            bio = StringField(default=teachers.bio)
         return F()
 
 class ReviewFormFactory:
@@ -33,7 +35,8 @@ class PostingFormFactory:
             category = SelectField(u'Category', choices=[('Lecture Recordings', 'Lecture Recordings'), ('Study Guides', 'Study Guides'), ('Handouts', 'Handouts'), ('Projects', 'Projects')])
             subject = StringField(default='')
             education_level = SelectField(u'Education Level', choices=[('First Grade', 'First Grade'), ('Second Grade', 'Second Grade'), ('Third Grade', 'Third Grade'),('Fourth Grade', 'Fourth Grade'),('Fifth Grade', 'Fifth Grade'),
-            ('Sixth Grade', 'Sixth Grade'),('Seventh Grade', 'Seventh Grade'),('Eigth Grade', 'Eigth Grade'),('Ninth Grade', 'Ninth Grade'),('Tenth Grade', 'Tenth Grade'),('Eleventh Grade', 'Eleventh Grade'),('Twelfth Grade', 'Twelfth Grade')])
+            ('Sixth Grade', 'Sixth Grade'),('Seventh Grade', 'Seventh Grade'),('Eigth Grade', 'Eigth Grade'),('Ninth Grade', 'Ninth Grade'),('Tenth Grade', 'Tenth Grade'),('Eleventh Grade', 'Eleventh Grade'),('Twelfth Grade', 'Twelfth Grade'),
+            ("Undergraduate", "Undergraduate"), ("Graduate","Graduate")])
             file = FileField(u'File Upload')
             description = StringField(default='')
         return F()
