@@ -145,8 +145,8 @@ def review(resource_id):
         num_reviews = len([r for r in reviews if r.teacher_id == current_user.username])
 
         if num_reviews >= 1:
-            flash('You can only review an resource once')
-            return
+            flash('You can only review a resource once')
+            return redirect(url_for('review', resource_id=resource_id))
 
         try:
             new_review = models.Reviews()
@@ -161,7 +161,7 @@ def review(resource_id):
             db.session.commit()
             db.session.close()
 
-            return
+            return redirect(url_for('review', resource_id=resource_id))
         except BaseException as e:
             form.errors['database'] = str(e)
 
@@ -270,7 +270,7 @@ def login():
         # take the user-supplied password, hash it, and compare it to hashed password in the database
         if (teacher is None) or (teacher.password != password):
             flash('Incorrect username/password combination.')
-            return redirect(url_for('login')) 
+            return redirect(url_for('login'))
         else:
             print('WE DA BEST')
             # if the above check passes, then we know the user has the right credentials
