@@ -340,7 +340,7 @@ def reset_post(token):
 @login_required
 def logout():
     logout_user()
-    return # redirect(url_for('home')) go back to home pg
+    return redirect(url_for('login')) 
 
 
 @app.template_filter('pluralize')
