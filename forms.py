@@ -31,6 +31,7 @@ class PostingFormFactory:
         class F(FlaskForm):
             resource_name = StringField(default='')
             category = SelectField(u'Category', choices=[('Lecture Recordings', 'Lecture Recordings'), ('Study Guides', 'Study Guides'), ('Handouts', 'Handouts'), ('Projects', 'Projects')])
+            subject = StringField(default='')
             file = FileField(u'File Upload')
             description = StringField(default='')
         return F()
@@ -41,6 +42,7 @@ class ResourceEditFormFactory:
         class F(FlaskForm):
             resource_name = StringField(default=resources.resource_name)
             category = SelectField(u'Category', choices=[('Lecture Recordings', 'Lecture Recordings'), ('Study Guides', 'Study Guides'), ('Handouts', 'Handouts'), ('Projects', 'Projects')])
+            subject = StringField(default=resources.subject)
             file = FileField(u'File Upload')
             description = StringField(default=resources.description)
         return F()
