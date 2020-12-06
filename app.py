@@ -34,7 +34,7 @@ levels = ['First Grade', 'Second Grade', 'Third Grade', 'Fourth Grade', 'Fifth G
 
 
 @app.route('/')
-
+@login_required
 def home():
     resources = {}
 
@@ -175,12 +175,14 @@ def review(resource_id):
     return render_template('reviews.html', resource=resource, reviews=reviews, avg_rating=avg_rating, form=form)
 
 @app.route('/search', methods=['GET'])
+@login_required
 def search_page(resources=None):
     resources = [] if resources is None else resources
     return render_template('search-resources.html', resources=resources, form=forms.SearchFormFactory.form(), categories=categories, levels=levels)
 
 
 @app.route('/search', methods=['POST'])
+@login_required
 def search():
     resources = []
 
@@ -207,14 +209,14 @@ def search():
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
-def profile(username):
+def profile():
     user =  db.session.query(models.Teachers)\
-        .filter(models.Teachers.username == username).one()
+        .filter(models.Teachers.username == current_user.username).one()
 
-    rating = db.session.execute('SELECT AVG(item_rating) FROM reviews WHERE teacher_id=:teacher_id', dict(teacher_id=username)).first()[0]
+    rating = db.session.execute('SELECT AVG(item_rating) FROM reviews WHERE teacher_id=:teacher_id', dict(teacher_id=current_user.username)).first()[0]
 
     resources_provided = db.session.query(models.Resources)\
-        .filter(models.Resources.teacher_id == username).all()
+        .filter(models.Resources.teacher_id == current_user.username).all()
 
     return render_template('profile.html', user=user, resources_provided=resources_provided, rating=rating)
 
