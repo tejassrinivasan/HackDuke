@@ -256,25 +256,25 @@ def register():
     else:
         return #render_template("register.html")
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         remember = True if request.form.get('remember') else False
-
-
+        flash('yo whaddup')
         teacher = models.Teachers.query.filter_by(username=username).first()
 
         # take the user-supplied password, hash it, and compare it to hashed password in the database
         if not teacher or not check_password_hash(teacher.password, password):
             flash('Incorrect username/password combination.')
-            return #redirect(url_for('login'))  user doesn't exist or password is wrong, reload the page
+            return redirect(url_for('login'))  #user doesn't exist or password is wrong, reload the page
 
         # if the above check passes, then we know the user has the right credentials
         login_user(teacher, remember=remember)
     else:
-        return #render_template('login.html')
+        print('hahahaha')
+        return render_template('login.html')
 
 @app.route('/forgot', methods=['GET', 'POST'])
 def forgot():
