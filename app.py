@@ -84,7 +84,7 @@ def edit_resource(resource_id):
     return
 
 @app.route('/post_resource', methods=['GET', 'POST'])
-
+@login_required
 def post_resource():
     form = forms.PostingFormFactory.form()
     if form.validate_on_submit():
@@ -128,6 +128,7 @@ def post_resource():
     return render_template('post_resource.html', form=form)
 
 @app.route('/resource/<resource_id>/reviews', methods=['GET', 'POST'])
+@login_required
 def review(resource_id):
     resource = db.session.query(models.Resources) \
         .filter(models.Resources.resource_id == resource_id).first()
@@ -198,7 +199,7 @@ def search():
     return
 
 @app.route('/profile/<username>', methods=['GET', 'POST'])
-
+@login_required
 def profile(username):
     user =  db.session.query(models.Teachers)\
         .filter(models.Teachers.username == username).one()
@@ -224,11 +225,11 @@ def edit_user():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id) #check this later for bugs
+    return models.Teachers.query.get(user_id) #check this later for bugs
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
-    if request.method ==- 'POST':
+    if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         location = request.form.get('location')
@@ -256,18 +257,17 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         remember = True if request.form.get('remember') else False
-        flash('yo whaddup')
         teacher = models.Teachers.query.filter_by(username=username).first()
-
         # take the user-supplied password, hash it, and compare it to hashed password in the database
-        if not teacher or not check_password_hash(teacher.password, password):
+        if (teacher is None) or (teacher.password != password):
             flash('Incorrect username/password combination.')
-            return redirect(url_for('login'))  #user doesn't exist or password is wrong, reload the page
-
-        # if the above check passes, then we know the user has the right credentials
-        login_user(teacher, remember=remember)
+            return redirect(url_for('login')) 
+        else:
+            print('WE DA BEST')
+            # if the above check passes, then we know the user has the right credentials
+            login_user(teacher, remember=remember)
+            return redirect(url_for('profile'))
     else:
-        print('hahahaha')
         return render_template('login.html')
 
 @app.route('/forgot', methods=['GET', 'POST'])
