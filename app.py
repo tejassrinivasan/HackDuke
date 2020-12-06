@@ -302,7 +302,7 @@ def forgot():
 
 @app.route('/reset/<token>')
 def reset_with_token(token):
-     password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     try:
         password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
         username = password_reset_serializer.loads(token, salt='password-reset-salt', max_age=3600)
