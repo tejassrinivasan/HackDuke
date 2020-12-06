@@ -240,6 +240,7 @@ def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        name = request.form.get('name')
         location = request.form.get('location')
         subjects = request.form.get('subjects')
         education_level = request.form.get('education level')
@@ -249,15 +250,15 @@ def register():
         existing = models.Teachers.query.filter_by(username=username).first()
         if existing:
          flash('There already exists an account with this username. Please register with a different username.')
-         return #redirect(url_for('register')) # username already in use
+         return redirect(url_for('register')) # username already in use
         else:
-            new_teacher = models.Teachers(username=username, password=generate_password_hash(password, method='sha256'), location=location, subjects=subjects, education_level=education_level, bio=bio, maiden=generate_password_hash(maiden, method='sha256'))
+            new_teacher = models.Teachers(username=username, password=password, name=name, location=location, subjects=subjects, education_level=education_level, bio=bio, maiden=maiden)
             db.session.add(new_teacher)
             db.session.commit()
             db.session.close()
             return redirect(url_for('login'))
     else:
-        return #render_template("register.html")
+        return render_template("register.html")
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -328,7 +329,7 @@ def reset_post(token):
         flash('Invalid username!', 'error')
         return redirect(url_for('login'))
 
-    hashedPassword = generate_password_hash(password, method='sha256')
+    hashedPassword = password
     print("TEACHER", teacher)
     db.session.execute('UPDATE teachers SET password=:password WHERE username=:username', dict(password=hashedPassword, username=username))
     db.session.commit()

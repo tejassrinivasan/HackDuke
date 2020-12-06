@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="columns is-centered">
+    <div class="column is-6">
+        <h3 class="title">Mini-Amazon</h3>
+        <div class="box">
+            <h5 class="title is-5 is-pulled-left">Enter username and password</h5>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="notification is-danger">
+                    {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
+                </div>
+            {% endif %}
+            {% endwith %}
+            <form method="POST" action="/register">
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-info is-medium" type="text" name="username" placeholder="Username*" autofocus="" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-info is-medium" type="password" name="password" placeholder="Password*" required>
+                    </div>
+                </div><hr>
+
+                <h5 class="title is-5 is-pulled-left margin-top">Enter user information</h5>
+
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-info is-medium" type="text" name="name" placeholder="Name*" autofocus required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-info is-medium" type="text" name="location" placeholder="Location">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-info is-medium" type="text" name="subjects" placeholder="Subjects">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-info is-medium" type="text" name="education-level" placeholder="Education Level">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <textarea class="textarea is-info is-medium" type="text" name="bio" placeholder="Bio"></textarea>
+                    </div>
+                </div>
+                <hr>
+
+                <h5 class="title is-5 is-pulled-left margin-top">Security question</h5>
+
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-info is-medium" type="text" name="maiden" placeholder="What is your mother's maiden name?*" required>
+                    </div>
+                </div>
+                <hr>
+                <button class="button is-block is-primary is-large is-fullwidth">Create user</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
