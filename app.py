@@ -254,8 +254,6 @@ def register():
             return redirect(url_for('login'))
     else:
         return #render_template("register.html")
-    
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -277,28 +275,70 @@ def login():
     else:
         return #render_template('login.html')
 
-@app.route('/forgot', methods=['POST'])
-def forgot_post():
-    return ""
+@app.route('/forgot', methods=['GET', 'POST'])
+def forgot():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        maiden = request.form.get('maiden')
+
+        teacher = models.Teachers.query.filter_by(username=username).first()
+
+        # take the user-supplied password, hash it, and compare it to hashed password in the database
+        if not teacher or not check_password_hash(teacher.maiden, maiden):
+            flash('Incorrect username/security answer combination.')
+            return #redirect(url_for('forgot')) # user doesn't exist or password is wrong, reload the page
+
+        # if the above check passes, then we know the user has the right credentials
+
+        password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        password_reset_url = url_for(
+         'reset_with_token',
+         token = password_reset_serializer.dumps(username, salt='password-reset-salt'),
+         _external=True)
+
+        return #redirect(password_reset_url) redirects to password reset page
+    else:
+        return #render_template("forgot.html")
 
 @app.route('/reset/<token>')
 def reset_with_token(token):
-    return ""
+    password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    try:
+        password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        username = password_reset_serializer.loads(token, salt='password-reset-salt', max_age=3600)
+    except:
+        flash('The password reset link is invalid or has expired.', 'error')
+        return redirect(url_for('login'))
+
+    return #render_template('reset_with_token.html', token=token)
 
 @app.route('/reset/<token>', methods=['POST'])
 def reset_post(token):
-    return ""
+    password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    password = request.form.get('password')
 
+    try:
+        username = password_reset_serializer.loads(token, salt='password-reset-salt', max_age=3600)
+        teacher = models.Teachers.query.filter_by(username=username).first()
+    except:
+        traceback.print_exc()
+        flash('Invalid username!', 'error')
+        return redirect(url_for('login'))
 
-@app.route('/forgot')
-def forgot():
-    return ""
+    hashedPassword = generate_password_hash(password, method='sha256')
+    print("TEACHER", teacher)
+    db.session.execute('UPDATE teachers SET password=:password WHERE username=:username', dict(password=hashedPassword, username=username))
+    db.session.commit()
+    db.session.close()
+    flash('Your password has been updated!', 'success')
+    return #redirect(url_for('login'))
 
 
 @app.route('/logout')
 @login_required
-def resource(resource_id):
-    return ""
+def logout():
+    logout_user()
+    return # redirect(url_for('home')) go back to home pg
 
 
 if __name__ == '__main__':
