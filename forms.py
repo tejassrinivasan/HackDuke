@@ -32,7 +32,7 @@ class PostingFormFactory:
             resource_name = StringField(default='')
             category = SelectField(u'Category', choices=[('Lecture Recordings', 'Lecture Recordings'), ('Study Guides', 'Study Guides'), ('Handouts', 'Handouts'), ('Projects', 'Projects')])
             subject = StringField(default='')
-            education_level = SelectField(u'Education Level', choices=[('', 'High School'), ('College', 'College'), ('Middle School', 'Middle School'), ('Projects', 'Projects')])
+            education_level = SelectField(u'Education Level', choices=[('First Grade', 'High School'), ('College', 'College'), ('Middle School', 'Middle School'), ('Projects', 'Projects')])
             file = FileField(u'File Upload')
             description = StringField(default='')
         return F()
