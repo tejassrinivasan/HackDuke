@@ -284,25 +284,23 @@ def forgot():
     if request.method == 'POST':
         username = request.form.get('username')
         maiden = request.form.get('maiden')
-
         teacher = models.Teachers.query.filter_by(username=username).first()
 
         # take the user-supplied password, hash it, and compare it to hashed password in the database
-        if not teacher or not check_password_hash(teacher.maiden, maiden):
+        if (teacher is None) or (teacher.maiden != maiden):
             flash('Incorrect username/security answer combination.')
-            return #redirect(url_for('forgot')) # user doesn't exist or password is wrong, reload the page
+            return redirect(url_for('forgot')) # user doesn't exist or password is wrong, reload the page
 
         # if the above check passes, then we know the user has the right credentials
-
-        password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-        password_reset_url = url_for(
-         'reset_with_token',
-         token = password_reset_serializer.dumps(username, salt='password-reset-salt'),
-         _external=True)
-
-        return #redirect(password_reset_url) redirects to password reset page
+        else:
+            password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+            password_reset_url = url_for(
+            'reset_with_token',
+            token = password_reset_serializer.dumps(username, salt='password-reset-salt'),
+            _external=True)
+            return redirect(password_reset_url) #redirects to password reset page
     else:
-        return #render_template("forgot.html")
+        return render_template("forgot.html")
 
 @app.route('/reset/<token>')
 def reset_with_token(token):
@@ -314,7 +312,7 @@ def reset_with_token(token):
         flash('The password reset link is invalid or has expired.', 'error')
         return redirect(url_for('login'))
 
-    return #render_template('reset_with_token.html', token=token)
+    return render_template('reset_with_token.html', token=token)
 
 @app.route('/reset/<token>', methods=['POST'])
 def reset_post(token):
@@ -329,13 +327,13 @@ def reset_post(token):
         flash('Invalid username!', 'error')
         return redirect(url_for('login'))
 
-    hashedPassword = password
+    updatedPassword = password
     print("TEACHER", teacher)
-    db.session.execute('UPDATE teachers SET password=:password WHERE username=:username', dict(password=hashedPassword, username=username))
+    db.session.execute('UPDATE teachers SET password=:password WHERE username=:username', dict(password=updatedPassword, username=username))
     db.session.commit()
     db.session.close()
     flash('Your password has been updated!', 'success')
-    return #redirect(url_for('login'))
+    return redirect(url_for('login'))
 
 
 @app.route('/logout')
