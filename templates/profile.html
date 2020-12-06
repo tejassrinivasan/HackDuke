@@ -1,0 +1,26 @@
+{% block heading %}User Information: {{user.username}}{% endblock %}
+{% block content %}
+
+<h3> Name: {{user.name}}</h3>
+<h3> Rating:
+{% if rating is number %}
+<p>{{'%0.2f' % rating}} / 5.00</p>
+{% else %}
+<p>Seller has no ratings</p>
+{% endif %}
+</h3>
+<h3> School: {{user.location}}</h3>
+<h3> Subjects: {{user.subjects}}</h3>
+<h3> Education Level: {{user.education_level}}</h3>
+<h3> Bio: {{user.bio}}</h3>
+
+<h1>Resources Provided</h1>
+{% for resource in resources_provided %}
+  <h2> Name: {{resource.resource_name}} </h2>
+  <h2> Category: {{resource.category}} </h2>
+  <h2> Subject: {{resource.subject}} </h2>
+  <h2> Education Level: {{resource.education_level}} </h2>
+  <h2> Date Posted: {{resource.date_posted}} </h2>
+{% endfor %}
+
+{% endblock %}

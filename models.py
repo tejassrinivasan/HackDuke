@@ -7,6 +7,7 @@ from flask_login import UserMixin
 class Teachers(UserMixin, db.Model):
     __tablename__ = 'teachers'
     username = db.Column('username', db.String(30), primary_key=True)
+    name = db.Column('name', db.String(100))
     password = db.Column('password', db.String(100))
     location = db.Column('location', db.String(800))
     subjects = db.Column('subjects', db.String(100))
@@ -17,7 +18,7 @@ class Teachers(UserMixin, db.Model):
         return (self.username)
 
 class Resources(db.Model):
-    __tablename__ = 'Resources'
+    __tablename__ = 'resources'
     resource_id = db.Column('resource_id', db.String(30), primary_key=True)
     teacher_id = db.Column('teacher_id', db.String(30), primary_key=True)
     resource_name = db.Column('resource_name', db.String(500))

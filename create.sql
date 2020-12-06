@@ -34,3 +34,6 @@ INSERT INTO Teachers VALUES('rgeller', 'Ross Geller', 'StrongPassword', 'Wheeler
 INSERT INTO Teachers VALUES('mgeller', 'Monica Geller', 'StrongPassword', 'Highland Ranch Elementary School', 'Physics, English', 'First Grade', 'I hate online teaching!', 'Monica');
 INSERT INTO Teachers VALUES('cbing', 'Chandler Bing', 'StrongPassword', 'Harvard', 'Math, Dance', 'Graduate', 'Looking for someone to teach me how to teach', 'Cherry');
 INSERT INTO Teachers VALUES('pbuffay', 'Phoebe Buffay', 'StrongPassword', 'Duke', 'Computer Science', 'Undergraduate', 'I code with my nose', 'Patoony');
+
+
+INSERT INTO Resources VALUES('qwertyuiopasdfghjklzxcvbnmjhye', 'pbuffay', 'React Cheat Sheet', 'Handouts', 'Computer Science', 'Undergraduate', 'https://imgur.com/a/eCKPeKr', 'This is a helpful guide for React', 'December 5, 2020');

@@ -30,6 +30,7 @@ login_manager.login_view = 'login'
 login_manager.init_app(app)
 
 @app.route('/')
+@login_required
 def home():
     resources = []
 
@@ -202,7 +203,7 @@ def search():
 
     return
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/profile/<username>', methods=['GET', 'POST'])
 @login_required
 def profile(username):
     user =  db.session.query(models.Teachers)\
@@ -213,7 +214,7 @@ def profile(username):
     resources_provided = db.session.query(models.Resources)\
         .filter(models.Resources.teacher_id == username).all()
 
-    return
+    return render_template('profile.html', user=user, resources_provided=resources_provided, rating=rating)
 
 @app.route('/edit-user', methods=['GET', 'POST'])
 @login_required
