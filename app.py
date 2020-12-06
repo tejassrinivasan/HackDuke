@@ -144,11 +144,11 @@ def review(resource_id):
     if form.validate_on_submit():
         num_reviews = len([r for r in reviews if r.teacher_id == current_user.username])
 
-        if num_reviews >= 1:
+        if num_reviews > 1:
             flash('You can only review a resource once')
             return redirect(url_for('review', resource_id=resource_id))
 
-        if resource.reviewer_username == resource.teacher_id:
+        if current_user.username == resource.teacher_id:
             flash('You cannot review your own item!')
             return redirect(url_for('review', resource_id=resource_id))
 
