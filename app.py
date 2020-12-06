@@ -340,11 +340,6 @@ def logout():
     logout_user()
     return # redirect(url_for('home')) go back to home pg
 
-@app.route('/logout')
-@login_required
-def resource(resource_id):
-    return ""
-
 
 if __name__ == '__main__':
     app.run(debug=True)
