@@ -28,8 +28,14 @@ db = SQLAlchemy(app, session_options={'autocommit': False})
 def home():
     return render_template("login.html")
 
+<<<<<<< HEAD
 
 
+=======
+@app.route('/resource/<resource_id>')
+@login_required
+def resource(resource_id):
+>>>>>>> 4b46bd17504bd361cae9070b80a01376c0c5f964
 
 if __name__ == '__main__':
     app.run(debug=True)
