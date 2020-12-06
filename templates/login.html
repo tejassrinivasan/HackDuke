@@ -1,46 +1,47 @@
-{% extends "base.html" %}
-
+{% extends 'base.html' %}
+{% block heading %}{% endblock %}
 {% block content %}
-<div class="columns is-centered">
-    <div class="column is-5">
-        <h3 class="title">Mini-Amazon</h3>
-        <div class="box">
-            <h5 class="title is-5 is-pulled-left">Sign-in</h5>
-          {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <div class="notification is-danger">
-                {{ messages[0] }}
-            </div>
-          {% endif %}
-          {% endwith %}
-          <form method="POST" action="/login">
-            <div class="field">
-                <div class="control">
-                    <input class="input is-info is-large" type="username" name="username" placeholder="Username" autofocus="">
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <input class="input is-info is-large" type="password" name="password" placeholder="Password">
-                </div>
-            </div>
-            <div class="field is-pulled-left">
-                <label class="checkbox">
-                    <input type="checkbox">
-                    Remember me
-                </label>
-            </div>
-            <button class="button is-primary is-large is-fullwidth">Sign-in</button><br>
-          </form>
-            <a href="{{url_for('forgot')}}">
-                <button class="button is-light is-large is-light is-fullwidth">Forgot your password?</button>
-            </a>
-            <hr>
-            <h5 class="title is-5 is-pulled-left">Need an account?</h5>
-            <a href="{{url_for('register')}}">
-                <button class="button is-primary is-large is-fullwidth">Register</button>
-            </a>
-        </div>
+
+<form method="POST" action="/login">
+    <div>
+       <h1>WHADDUP BEICHES</h1>
     </div>
-</div>
-{% endblock %}
+    <div class="imgcontainer">
+      <img src="https://bbk12e1-cdn.myschoolcdn.com/ftpimages/395/news/large_news917268_777457.JPG" alt="Banner">
+      <br>
+    </div>
+    <div class="container">
+      <label for="username"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="username" required>
+        <br>
+        <br>
+      <label for="password"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" required>
+        <br>
+        <br>
+      <button type="submit">Login</button>
+      <label>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+      </label>
+      <br>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <span>{{ message }}</span>
+            <br>
+        </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+
+    <div class="container" style="background-color:#f1f1f1">
+      <span class="password">Forgot <a href="#">password?</a></span>
+    </div>
+  </form>
+
+  {% endblock %}

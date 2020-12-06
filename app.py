@@ -34,7 +34,7 @@ levels = ['First Grade', 'Second Grade', 'Third Grade', 'Fourth Grade', 'Fifth G
 
 
 @app.route('/')
-
+@login_required
 def home():
     resources = {}
 
@@ -131,6 +131,7 @@ def post_resource():
     return render_template('post_resource.html', form=form)
 
 @app.route('/resource/<resource_id>/reviews', methods=['GET', 'POST'])
+@login_required
 def review(resource_id):
     resource = db.session.query(models.Resources) \
         .filter(models.Resources.resource_id == resource_id).first()
@@ -174,12 +175,14 @@ def review(resource_id):
     return render_template('reviews.html', resource=resource, reviews=reviews, avg_rating=avg_rating, form=form)
 
 @app.route('/search', methods=['GET'])
+@login_required
 def search_page(resources=None):
     resources = [] if resources is None else resources
     return render_template('search-resources.html', resources=resources, form=forms.SearchFormFactory.form(), categories=categories, levels=levels)
 
 
 @app.route('/search', methods=['POST'])
+@login_required
 def search():
     resources = []
 
@@ -206,14 +209,14 @@ def search():
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
-def profile(username):
+def profile():
     user =  db.session.query(models.Teachers)\
-        .filter(models.Teachers.username == username).one()
+        .filter(models.Teachers.username == current_user.username).one()
 
-    rating = db.session.execute('SELECT AVG(item_rating) FROM reviews WHERE teacher_id=:teacher_id', dict(teacher_id=username)).first()[0]
+    rating = db.session.execute('SELECT AVG(item_rating) FROM reviews WHERE teacher_id=:teacher_id', dict(teacher_id=current_user.username)).first()[0]
 
     resources_provided = db.session.query(models.Resources)\
-        .filter(models.Resources.teacher_id == username).all()
+        .filter(models.Resources.teacher_id == current_user.username).all()
 
     return render_template('profile.html', user=user, resources_provided=resources_provided, rating=rating)
 
@@ -230,11 +233,11 @@ def edit_user():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id) #check this later for bugs
+    return models.Teachers.query.get(user_id) #check this later for bugs
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
-    if request.method ==- 'POST':
+    if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         location = request.form.get('location')
@@ -256,25 +259,24 @@ def register():
     else:
         return #render_template("register.html")
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         remember = True if request.form.get('remember') else False
-
-
         teacher = models.Teachers.query.filter_by(username=username).first()
-
         # take the user-supplied password, hash it, and compare it to hashed password in the database
-        if not teacher or not check_password_hash(teacher.password, password):
+        if (teacher is None) or (teacher.password != password):
             flash('Incorrect username/password combination.')
-            return #redirect(url_for('login'))  user doesn't exist or password is wrong, reload the page
-
-        # if the above check passes, then we know the user has the right credentials
-        login_user(teacher, remember=remember)
+            return redirect(url_for('login')) 
+        else:
+            print('WE DA BEST')
+            # if the above check passes, then we know the user has the right credentials
+            login_user(teacher, remember=remember)
+            return redirect(url_for('profile'))
     else:
-        return #render_template('login.html')
+        return render_template('login.html')
 
 @app.route('/forgot', methods=['GET', 'POST'])
 def forgot():
