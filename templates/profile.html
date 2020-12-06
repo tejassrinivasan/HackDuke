@@ -1,26 +1,99 @@
+{% extends 'base.html' %}
 {% block heading %}User Information: {{user.username}}{% endblock %}
 {% block content %}
 
-<h3> Name: {{user.name}}</h3>
-<h3> Rating:
-{% if rating is number %}
-<p>{{'%0.2f' % rating}} / 5.00</p>
-{% else %}
-<p>Seller has no ratings</p>
-{% endif %}
-</h3>
-<h3> School: {{user.location}}</h3>
-<h3> Subjects: {{user.subjects}}</h3>
-<h3> Education Level: {{user.education_level}}</h3>
-<h3> Bio: {{user.bio}}</h3>
+<div class="columns is-centered">
+    <div class="column is-white is-8">
+        <h3 class="title">{{user.username}}'s Page</h3>
+        <div class="box">
+            <div class="columns is-centered">
+                <div class="column is-one-third">
+                    <span class="icon is-large" style="margin:5px;">
+                        <i class="fas fa-user-circle fa-3x"></i>
+                    </span>
+                    <br>
+                    <span class="tag is-primary is-large" style="width:150px;margin:5px;">
+                        <strong>Name:</strong>
+                    </span>
+                    <br>
+                    <span class="tag is-primary is-large" style="width:150px;margin:5px;">
+                        <strong>Rating:</strong>
+                    </span>
+                    <br>
+                    <span class="tag is-primary is-large" style="width:150px;margin:5px;">
+                        <strong>School:</strong>
+                    </span>
+                    <br>
+                    <span class="tag is-primary is-large" style="width:150px;margin:5px;">
+                        <strong>Subjects:</strong>
+                    </span>
+                    <br>
+                    <br>
+                    <span class="tag is-primary is-large" style="width:150px;margin:5px;">
+                        <strong>Education Level:</strong>
+                    </span>
+                    <br>
+                    <br>
+                    <span class="tag is-primary is-large" style="width:150px;margin:5px;">
+                        <strong>Bio:</strong>
+                    </span>
+                    <br>
+                </div>
+                <div class="column is-two-thirds">
+                    <span class="tag is-white is-large" style="height:48px;width:450px;margin:5px;">
+                        <p><em>User info</em></p>
+                    </span>
+                    <span class="tag is-light is-large" style="width:450px;margin:5px;">
+                        <p>{{user.name}}</p>
+                    </span>
+                    <span class="tag is-light is-large" style="width:450px;margin:5px;">
+                        {% if rating is number %}
+                        <p>{{'%0.2f' % rating}} / 5.00</p>
+                        {% else %}
+                        <p>User has no ratings</p>
+                        {% endif %}
+                    </span>
+                    <span class="tag is-light is-large" style="width:450px;margin:5px;">
+                        <p>{{user.location}}</p>
+                    </span>
+                    <span class="tag is-light is-large" style="width:450px;margin:5px;">
+                        <p>{{user.subjects}}</p>
+                    </span>
+                    <span class="tag is-light is-large" style="width:450px;margin:5px;">
+                        <p>{{user.education_level}}</p>
+                    </span>
+                    <span class="tag is-light is-large margin-top" style="width:450px;height:150px;margin:5px;">
+                        <p>{{user.bio}}</p>
+                    </span>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <br>
+        <h3 class="title">Resources Provided</h3>
+        <div class="box">
+          {% for resource in resources_provided %}
 
-<h1>Resources Provided</h1>
-{% for resource in resources_provided %}
-  <h2> Name: {{resource.resource_name}} </h2>
-  <h2> Category: {{resource.category}} </h2>
-  <h2> Subject: {{resource.subject}} </h2>
-  <h2> Education Level: {{resource.education_level}} </h2>
-  <h2> Date Posted: {{resource.date_posted}} </h2>
-{% endfor %}
+          <div class="columns">
+                <div class="column is-one-half">
+                    <h5 class="title is-5">
+                        <a href="{{url_for('resource', resource_id=resource.resource_id)}}">
+                            <span class="tag is-light is-large">
+                                {{resource.resource_name}}
+                            </span>
+                        </a>
+                    </h5>
+                    <p>Category: <strong>{{resource.category}}</strong></p>
+                    <p>Subject: <strong>{{resource.subject}}</strong></p>
+                    <p>Education Level: <strong>{{resource.education_level}}</strong></p>
+                    <p>Description: <em>{{resource.description}}</em></p>
+                    <p>Date Posted: <strong>{{resource.date_posted}}</strong></p>
 
+                </div>
+            </div>
+            <hr/>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

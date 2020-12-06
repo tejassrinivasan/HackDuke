@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block heading %}{% endblock %}
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="columns is-centered">
+    <div class="column is-6">
+        <h3 class="title">Post Resource</h3>
+        <div class="box">
+            <form action="{{url_for('post_resource')}}" method="POST" enctype="multipart/form-data" >
+
+                {{form.csrf_token}}
+
+                <p>
+                    Name: {{form.resource_name}}
+                    {% if form.resource_name.errors %}
+                <ul>{% for error in form.resource_name.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+                </p>
+
+                <p>
+                    Category: {{form.category}}
+                    {% if form.category.errors %}
+                <ul>{% for error in form.category.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+                </p>
+
+                <p>
+                    Subject: {{form.subject}}
+                    {% if form.subject.errors %}
+                <ul>{% for error in form.subject.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+                </p>
+
+                <p>
+                    Education Level: {{form.education_level}}
+                    {% if form.education_level.errors %}
+                <ul>{% for error in form.education_level.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+                </p>
+
+                <p>
+                    Description: {{form.description}}
+                    {% if form.description.errors %}
+                <ul>{% for error in form.category.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+                </p>
+                <p>
+                File: {{form.file}}
+                {% if form.file.errors %}
+                <ul>{% for error in form.file.errors %}<li>{{error}}</li>{% endfor %}</ul>
+                {% endif %}
+                </p>
+                <hr/>
+                <input class="button is-light is-medium" type="reset" value="Reset" style="margin-right:10px"/>
+                <input class="button is-primary is-medium" type="submit" value="Submit" style="margin-left:10px"/>
+                {% if 'database' in form.errors %}<p>{{form.errors['database']}}</p>{% endif %}
+            </form>
+            {% if 'database' in form.errors %}<p>{{form.errors['database']}}</p>{% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

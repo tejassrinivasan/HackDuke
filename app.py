@@ -62,8 +62,6 @@ def edit_resource(resource_id):
                 header = stream.read(512)
                 stream.seek(0)
                 format = imghdr.what(None, header)
-                if not format:
-                    return None
                 if (format == 'jpg' or format == 'png' or format == 'jpeg'):
                     apiUrl = 'https://api.imgur.com/3/file'
                     b64_image = base64.standard_b64encode(file.read())
@@ -85,8 +83,8 @@ def edit_resource(resource_id):
         flash('You are not posting this item or this is not a valid resource.')
     return
 
-@app.route('/post-resource', methods=['GET', 'POST'])
-@login_required
+@app.route('/post_resource', methods=['GET', 'POST'])
+
 def post_resource():
     form = forms.PostingFormFactory.form()
     if form.validate_on_submit():
@@ -94,10 +92,10 @@ def post_resource():
                          string.digits, k = 30))
         new_posting = models.Resources()
         new_posting.resource_id = randomString
-        new_posting.teacher_id = current_user.username
+        new_posting.teacher_id = 'pbuffay'
         new_posting.resource_name = form.resource_name.data
         new_posting.category = form.category.data
-        new_posting.subject = form.subject
+        new_posting.subject = form.subject.data
         new_posting.education_level = form.education_level.data
         new_posting.description = form.description.data
         if request.method == 'POST':
@@ -106,8 +104,6 @@ def post_resource():
             header = stream.read(512)
             stream.seek(0)
             format = imghdr.what(None, header)
-            if not format:
-                return None
             if (format == 'jpg' or format == 'png' or format == 'jpeg'):
                 apiUrl = 'https://api.imgur.com/3/file'
                 b64_image = base64.standard_b64encode(file.read())
@@ -119,19 +115,17 @@ def post_resource():
                 result = json.loads(response.text)
                 new_posting.file = result['data']['link']
             else:
-                new_posting.file = form.file.data
+                new_posting.file = form.file.data.filename
 
-        new_posting.date_posted = str(datetime.date.today())
+            new_posting.date_posted = str(datetime.date.today())
+            db.session.add(new_posting)
+            db.session.commit()
+            db.session.close()
 
-        db.session.add(new_posting)
+            flash('Resource posted successfully')
+            return redirect(url_for('post_resource'))
 
-        db.session.commit()
-        db.session.close()
-
-        flash('Resource posted successfully')
-        return
-
-    return
+    return render_template('post_resource.html', form=form)
 
 @app.route('/resource/<resource_id>/reviews', methods=['GET', 'POST'])
 def review(resource_id):
@@ -204,7 +198,7 @@ def search():
     return
 
 @app.route('/profile/<username>', methods=['GET', 'POST'])
-@login_required
+
 def profile(username):
     user =  db.session.query(models.Teachers)\
         .filter(models.Teachers.username == username).one()
