@@ -7,8 +7,8 @@
     <title>TeachOverflow</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="icon" 
-      type="image/png" 
+    <link rel="icon"
+      type="image/png"
       href="/static/img/favicon.png"
     >
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
@@ -54,7 +54,7 @@
                                     <strong>Log Out</strong>
                                   </a>
                                 {% else %}
-                                  <a class="button is-primary" href="{{url_for('register')}}">
+                                  <a class="button is-primary is-warning" href="{{url_for('register')}}">
                                       <strong>Sign Up</strong>
                                   </a>
                                   <a class="button is-info" href="{{url_for('login')}}">
