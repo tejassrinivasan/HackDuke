@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block heading %}{% endblock %}
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="columns is-centered">
+    <div class="column is-white is-9">
+        <form action="{{url_for('search')}}" method="POST">
+            {{form.csrf_token}}
+            <div class="field">
+                <div class="control">
+                    <input class="input is-primary is-rounded is-fullwidth" type="text" name="query" placeholder="Search for resources...">
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                  <div class="select is-primary is-rounded">
+                      <select name="category">
+                          <option value="All">
+                              Category
+                          </option>
+                          {% for category in categories %}
+                          <option value="{{ category }}">
+                              {{ category }}
+                          </option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                  <div class="select is-primary is-rounded">
+                      <select name="education level">
+                          <option value="All">
+                              Education Level
+                          </option>
+                          {% for education_level in levels %}
+                          <option value="{{ education_level }}">
+                              {{ education_level }}
+                          </option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                </div>
+            </div>
+            <a href="{{url_for('home')}}">
+                <input class="button is-light" value="Reset" style="margin-right:10px;margin-bottom:10px;width:100px;"/>
+            </a>
+            <input class="button is-primary" type="submit" value="Search" style="margin-left:10px;margin-bottom:10px;width:100px;"/>
+            {% if form.query.errors %}
+            <ul>
+                {% for error in form.query.errors %}
+                <li>{{error}}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% if 'database' in form.errors %}<p>{{form.errors['database']}}</p>{% endif %}
+        </form>
+
+        <div class="box">
+            <h4 class="title is-4">Searched Resources</h4>
+            <ul>
+                {% for resource in resources%}
+                <li>
+                    <div class="columns">
+                        <div class="column is-one-half">
+                            <button class="button is-primary is-inverted is-medium is-centered" style="white-space:normal;margin-top:20px;width:500px;height:auto;">
+                                <a href="{{url_for('resource', resource_id=resource.resource_id)}}">
+                                    {{resource.resource_name}}
+                                </a>
+                            </button>
+                            <p class="title is-6" style="margin-top:5px;">
+                                Posted by:
+                                <span class="tag">
+                                    <a href="{{url_for('profile', username=resource.teacher_id)}}">
+                                        {{resource.teacher_id}}
+                                    </a>
+                                </span>
+                            </p>
+                            <p class="title is-6" style="margin-top:5px;">
+                                Subject:
+                                <span class="tag">
+                                    {{resource.subject}}
+                                </span>
+                            </p>
+                            <p class="title is-6" style="margin-top:5px;">
+                                Education Level:
+                                <span class="tag">
+                                      {{resource.education_level}}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <hr/>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
