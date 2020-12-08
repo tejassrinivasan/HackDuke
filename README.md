@@ -1,4 +1,4 @@
-## HackDuke Project
+## TeachOverflow - HackDuke Project
 
 ## Link to Final Website
 
